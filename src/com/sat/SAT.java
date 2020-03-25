@@ -35,4 +35,13 @@ public class SAT {
         }
         return clauseMask;
     }
+
+    public int clauseScore(HashMap<Variable, Boolean> variableStates){
+        int score = 0;
+        for(Map.Entry m : clauseEvaluationMask(variableStates).entrySet()){
+            score += (Boolean)m.getValue() ? 1 : 0;
+        }
+        score /= clauses.size();
+        return score;
+    }
 }
