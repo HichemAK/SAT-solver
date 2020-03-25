@@ -7,6 +7,10 @@ import java.util.Map;
 public class Clause {
     private HashMap<Variable, Boolean> variablesNot;
 
+    public Clause(HashMap<Variable, Boolean> variablesNot){
+        this.variablesNot = variablesNot;
+    }
+
     public HashMap<Variable, Boolean> getVariablesNot() {
         return variablesNot;
     }
