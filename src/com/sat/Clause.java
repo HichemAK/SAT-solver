@@ -11,7 +11,7 @@ public class Clause {
         return variablesNot;
     }
 
-    public void setVariables_not(HashMap<Variable, Boolean> variables_not) {
+    public void setVariablesNot(HashMap<Variable, Boolean> variables_not) {
         this.variablesNot = variables_not;
     }
 
