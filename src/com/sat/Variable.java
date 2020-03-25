@@ -9,7 +9,7 @@ public class Variable {
     }
 
     public Variable(){
-        this.name = "V" + String.valueOf(id);
+        this.name = String.valueOf(id);
         id++;
     }
 
