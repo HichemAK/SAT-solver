@@ -19,10 +19,10 @@ public class Clause {
         this.variablesNot = variables_not;
     }
 
-    public boolean evaluate(HashMap<Variable, Boolean> variableStates){
+    public boolean evaluate(Solution s){
         for(Map.Entry m : variablesNot.entrySet()){
-            if((Boolean)(m.getValue()) && variableStates.get(m.getKey()) ||
-                    !(Boolean)(m.getValue()) && !variableStates.get(m.getKey())){
+            if((Boolean)(m.getValue()) && s.get(m.getKey()) ||
+                    !(Boolean)(m.getValue()) && !s.get(m.getKey())){
                 return true;
             }
         }
