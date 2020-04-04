@@ -1,28 +1,18 @@
 package com.sat;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 
 public class Clause {
-    private HashMap<Variable, Boolean> variablesNot;
+    private Integer[] variables;
+    private Boolean[] notOp;
 
-    public Clause(HashMap<Variable, Boolean> variablesNot){
-        this.variablesNot = variablesNot;
-    }
-
-    public HashMap<Variable, Boolean> getVariablesNot() {
-        return variablesNot;
-    }
-
-    public void setVariablesNot(HashMap<Variable, Boolean> variables_not) {
-        this.variablesNot = variables_not;
+    public Clause(Integer[] variables, Boolean[] notOp) {
+        this.variables = variables;
+        this.notOp = notOp;
     }
 
     public boolean evaluate(Solution s){
-        for(Map.Entry m : variablesNot.entrySet()){
-            if((Boolean)(m.getValue()) && s.get(m.getKey()) ||
-                    !(Boolean)(m.getValue()) && !s.get(m.getKey())){
+        for(int i=0; i<variables.length; i++){
+            if(s.getConfig()[variables[i]].equals(notOp[i])){
                 return true;
             }
         }

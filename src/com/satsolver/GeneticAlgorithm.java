@@ -11,7 +11,7 @@ public class GeneticAlgorithm {
     private SAT sat;
     private double mutationRate = 0.05;
     private double crossoverRate = 0.15;
-    private int initialPop = 2;
+    private int initialPop = 50;
     private double crossoverLength = 0.5;
     private double suffFitness = 1;
 
@@ -76,9 +76,9 @@ public class GeneticAlgorithm {
     private void mutation(ArrayList<Solution> population) {
         Random rand = new Random();
         for(Solution s : population){
-            for(Map.Entry<Variable, Boolean> m : s.entrySet()){
+            for(int i=0;i<s.getConfig().length;i++){
                 if(rand.nextDouble() < mutationRate){
-                    m.setValue(!m.getValue());
+                    s.getConfig()[i] = !s.getConfig()[i];
                 }
             }
         }
@@ -86,9 +86,9 @@ public class GeneticAlgorithm {
 
     public Solution samplePop(){
         Random rand = new Random();
-        Solution s = new Solution();
-        for(Variable v : sat.getVariables()){
-            s.put(v, rand.nextBoolean());
+        Solution s = new Solution(sat.getNumVar());
+        for(int i=0;i<s.getConfig().length;i++){
+            s.getConfig()[i] = rand.nextBoolean();
         }
         return s;
     }
@@ -171,11 +171,11 @@ public class GeneticAlgorithm {
 
     public void crossSolutions(Solution s1, Solution s2){
         Random rand = new Random();
-        for(Map.Entry m : s1.entrySet()){
+        for(int i=0;i<s1.getConfig().length;i++){
             if(rand.nextDouble() < crossoverLength){
-                boolean temp = (boolean) s2.get(m.getKey());
-                s2.put((Variable) m.getKey(), (Boolean) m.getValue());
-                m.setValue(temp);
+                Boolean temp = s2.getConfig()[i];
+                s2.getConfig()[i] = s1.getConfig()[i];
+                s1.getConfig()[i] = temp;
             }
         }
     }

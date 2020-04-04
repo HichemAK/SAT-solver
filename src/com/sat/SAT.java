@@ -1,33 +1,12 @@
 package com.sat;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-
 public class SAT {
-    private HashSet<Clause> clauses;
-    private HashSet<Variable> variables;
+    private Clause[] clauses;
+    private int numVar;
 
-    public SAT(HashSet<Clause> clauses){
+    public SAT(Clause[] clauses, int numVar){
         this.clauses = clauses;
-        variables = new HashSet<>();
-        for(Clause c : clauses){
-            for(Map.Entry m : c.getVariablesNot().entrySet()){
-                variables.add((Variable) m.getKey());
-            }
-        }
-    }
-
-    public HashSet<Clause> getClauses() {
-        return clauses;
-    }
-
-    public void setClauses(HashSet<Clause> clauses) {
-        this.clauses = clauses;
-    }
-
-    public HashSet<Variable> getVariables(){
-        return variables;
+        this.numVar = numVar;
     }
 
     public boolean evaluate(Solution s){
@@ -39,20 +18,24 @@ public class SAT {
         return true;
     }
 
-    public HashMap<Clause, Boolean>  clauseEvaluationMask(Solution s){
-        HashMap<Clause, Boolean> clauseMask = new HashMap<>();
-        for(Clause c : clauses){
-            clauseMask.put(c, c.evaluate(s));
+    public int getNumVar() {
+        return numVar;
+    }
+
+    public Boolean[]  clauseEvaluationMask(Solution s){
+        Boolean[] clauseMask = new Boolean[clauses.length];
+        for(int i=0;i<clauses.length;i++){
+            clauseMask[i] = clauses[i].evaluate(s);
         }
         return clauseMask;
     }
 
     public double clauseScore(Solution s){
         int score = 0;
-        for(Map.Entry m : clauseEvaluationMask(s).entrySet()){
-            score += (Boolean)m.getValue() ? 1 : 0;
+        for(Boolean b : clauseEvaluationMask(s)){
+            score += b ? 1 : 0;
         }
-        score /= clauses.size();
+        score /= clauses.length;
         return score;
     }
 }
