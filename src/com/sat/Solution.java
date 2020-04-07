@@ -2,9 +2,9 @@ package com.sat;
 
 
 public class Solution {
-    Boolean[] config;
+    boolean[] config;
 
-    public Solution(Boolean[] config) {
+    public Solution(boolean[] config) {
         this.config = config;
     }
 
@@ -13,10 +13,10 @@ public class Solution {
     }
 
     public Solution(int numVar) {
-        this.config = new Boolean[numVar];
+        this.config = new boolean[numVar];
     }
 
-    public Boolean[] getConfig() {
+    public boolean[] getConfig() {
         return config;
     }
 
