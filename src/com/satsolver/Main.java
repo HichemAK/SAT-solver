@@ -4,26 +4,14 @@ import com.sat.Clause;
 import com.sat.SAT;
 import com.sat.Solution;
 
+import java.util.ArrayList;
+
+import static com.satsolver.Utils.*;
 import static java.lang.System.nanoTime;
 
 public class Main {
     public static void main(String[] args){
-        SAT[] sats = SATLoader.loads("benchmark");
-        int count = 0;
-        double t1, t2;
-        t1 = nanoTime();
-        for(int i=0;i<sats.length;i++){
-            GeneticAlgorithm GA = new GeneticAlgorithm(sats[i]);
-            Solution s = GA.solve(500);
-            System.out.println(i + ", " + sats[i].clauseScore(s));
-            if(sats[i].clauseScore(s) == sats[i].getClauses().length){
-                count++;
-            }
-        }
-
-        t2 = nanoTime();
-        System.out.println("Done. Accuracy = " + (double)count/sats.length);
-        System.out.println("Execution time = " + (t2-t1)/1000000000);
+        calculateStatsOnBenchmark(20);
     }
 
     public static void testSimpleExample(){
@@ -61,5 +49,46 @@ public class Main {
         }
 
         System.out.println("Done");
+    }
+
+    public static void calculateStatsOnBenchmark(int numTry){
+        SAT[] sats = SATLoader.loads("benchmark");
+        ArrayList<Integer> TR = new ArrayList<>();
+        ArrayList<Double> SM = new ArrayList<>();
+        ArrayList<Double> TEMG = new ArrayList<>();
+        ArrayList<Double> TEMR = new ArrayList<>();
+        ArrayList<Double> TEME = new ArrayList<>();
+        int count = 0;
+        double t1, t2, t, score;
+        int success;
+
+        for(int j=0;j<numTry;j++){
+            for(int i=0;i<sats.length;i++){
+                GeneticAlgorithm GA = new GeneticAlgorithm(sats[i]);
+                t1 = nanoTime();
+                Solution s = GA.solve(500);
+                t2 = nanoTime();
+                t = (t2-t1)/1000000000;
+                System.out.println((j*sats.length + i + 1) + "/" + (numTry*sats.length));
+                score = sats[i].clauseScore(s);
+                success = (score == sats[i].getClauses().length ? 1 : 0);
+                SM.add(score);
+                TR.add(success);
+                TEMG.add(t);
+                if(success == 1){
+                    TEMR.add(t);
+                }
+                else{
+                    TEME.add(t);
+                }
+            }
+        }
+        System.out.println("TR = " + mean2(TR));
+        double mean = mean(SM);
+        System.out.println("SM = " + mean);
+        System.out.println("SET = " + Math.sqrt(variance(SM, mean)));
+        System.out.println("TEMG = " + mean(TEMG));
+        System.out.println("TEMR = " + mean(TEMR));
+        System.out.println("TEME = " + mean(TEME));
     }
 }

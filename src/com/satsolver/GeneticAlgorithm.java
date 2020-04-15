@@ -5,6 +5,9 @@ import com.sat.Solution;
 
 import java.util.*;
 
+import static com.satsolver.Utils.mean;
+import static com.satsolver.Utils.variance;
+
 public class GeneticAlgorithm {
 
     private SAT sat;
@@ -45,6 +48,7 @@ public class GeneticAlgorithm {
     }
 
     public Solution solve(int numGen){
+        Arrays.fill(frequency, 0);
         firstTimeCalFitness = true;
         ArrayList<Solution> population = initPop();
         //System.out.println("Initpop : " + population.size());
@@ -64,6 +68,29 @@ public class GeneticAlgorithm {
             fitnesses = calculateWeightedFitness(population);
         }
         return population.get(getPosBestSolution(fitnesses[0]));
+    }
+
+    public Solution solveWithoutWeights(int numGen){
+        Arrays.fill(frequency, 0);
+        firstTimeCalFitness = true;
+        ArrayList<Solution> population = initPop();
+        //System.out.println("Initpop : " + population.size());
+        double[] fitness = calculateFitness(population);
+        //System.out.println("INIT FITNESS : " + fitness);
+        int posBestSolution;
+        for(int i=0;i<numGen;i++){
+            posBestSolution = getPosBestSolution(fitness);
+            //System.out.println(i + " , " + mean(fitnesses[0]));
+            //System.out.println(i + ", " + fitnesses[0][posBestSolution]);
+            if(posBestSolution != -1 && fitness[posBestSolution] >= suffFitness){
+                return population.get(posBestSolution);
+            }
+            population = selection(population, fitness);
+            population = crossover(population);
+            mutation(population);
+            fitness = calculateFitness(population);
+        }
+        return population.get(getPosBestSolution(fitness));
     }
 
     private int getPosBestSolution(double[] fitness) {
@@ -282,38 +309,9 @@ public class GeneticAlgorithm {
         }
     }
 
-    private double mean(ArrayList<Double> t){
-        double mean=0;
-        for(Double d : t){
-            mean += d;
-        }
-        return mean/t.size();
-    }
 
-    private double mean(double[] t){
-        double mean=0;
-        for(double d : t){
-            mean += d;
-        }
-        return mean/t.length;
-    }
 
-    private double variance(double[] t, double mean){
-        double variance = 0;
-        for(int i=0;i<t.length;i++){
-            variance += (t[i] - mean)*(t[i] - mean);
-        }
-        variance /= t.length;
-        return variance;
-    }
 
-    private String arrayToString(double[] array){
-        StringBuffer str = new StringBuffer("[");
-        for(int i=0;i<array.length;i++){
-            str.append(array[i]);
-            str.append(" ");
-        }
-        str.append("]");
-        return str.toString();
-    }
+
+
 }
