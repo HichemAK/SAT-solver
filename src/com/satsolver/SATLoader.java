@@ -4,6 +4,7 @@ import com.sat.Clause;
 import com.sat.SAT;
 
 import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -11,11 +12,13 @@ import java.util.HashSet;
 public class SATLoader {
     public static SAT[] loads(String directorypath){
         SAT[] sats;
-        File folder = new File(directorypath);
-        File[] fileList = folder.listFiles();
+        ClassLoader cl = SATLoader.class.getClassLoader();
+        URL url = cl.getResource(directorypath);
+        String path = url.getPath();
+        File[] fileList = new File(path).listFiles();
         sats = new SAT[fileList.length];
         for (int i=0;i<fileList.length;i++) {
-            sats[i] = load(fileList[i].getAbsolutePath());
+            sats[i] = load(directorypath + fileList[i].getPath().substring(fileList[i].getPath().lastIndexOf("\\")));
         }
         return sats;
     }
@@ -27,7 +30,8 @@ public class SATLoader {
         HashSet<Character> correctClauseChars = new HashSet<>(Arrays.asList('-','1','2','3','4','5','6','7','8','9','0'));
         BufferedReader reader;
         try {
-            reader = new BufferedReader(new FileReader(filepath));
+            ClassLoader cl = SATLoader.class.getClassLoader();
+            reader = new BufferedReader(new InputStreamReader(cl.getResourceAsStream(filepath)));
             String line = reader.readLine();
             while (line != null) {
                 line = line.trim().replaceAll(" +", " ");

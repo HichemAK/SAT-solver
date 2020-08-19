@@ -10,10 +10,10 @@ import static com.satsolver.Utils.*;
 import static com.satsolver.Utils.mean;
 import static java.lang.System.nanoTime;
 
-public class MainPSO {
+public class MainBSO {
     public static void main(String[] args){
-        System.out.println("Test PSO on benchmark + Calculate stats");
-        calculateStatsOnBenchmark(2);
+        System.out.println("Test BSO on benchmark + Calculate stats");
+        calculateStatsOnBenchmark(10);
     }
 
     public static void testSimpleExample(){
@@ -25,16 +25,16 @@ public class MainPSO {
         SAT sat = new SAT(clauses, 3);
 
 
-        PSO pso = new PSO(sat);
-        Solution s = pso.solve(100);
+        BSO bso = new BSO(sat);
+        Solution s = bso.solve(100);
         System.out.println(s.toString() + " \nScore : " + sat.clauseScore(s));
     }
 
     public static void testBenchmarks(){
         SAT[] sats = SATLoader.loads("benchmark");
         for(int i=0;i<sats.length;i++){
-            PSO pso = new PSO(sats[i]);
-            Solution s = pso.solve(2000);
+            BSO bso = new BSO(sats[i]);
+            Solution s = bso.solve(2000);
             System.out.println(i + ", " + sats[i].clauseScore(s));
         }
         System.out.println("Done");
@@ -42,10 +42,10 @@ public class MainPSO {
 
     public static void testOneBenchmark(){
         SAT sat = SATLoader.load("benchmark/uf75-01.cnf");
-        int num_test = 20;
+        int num_test = 10;
         for(int i=0;i<num_test;i++){
-            PSO pso = new PSO(sat);
-            Solution s = pso.solve(1000);
+            BSO bso = new BSO(sat);
+            Solution s = bso.solve(1000);
             System.out.println(i + ", " + sat.clauseScore(s));
         }
         System.out.println("Done");
@@ -64,9 +64,9 @@ public class MainPSO {
 
         for (int j = 0; j < numTry; j++) {
             for (int i = 0; i < sats.length; i++) {
-                PSO pso = new PSO(sats[i]);
+                BSO bso = new BSO(sats[i]);
                 t1 = nanoTime();
-                Solution s = pso.solve(500);
+                Solution s = bso.solve(1000);
                 t2 = nanoTime();
                 t = (t2 - t1) / 1000000000;
                 System.out.println((j * sats.length + i + 1) + "/" + (numTry * sats.length));
